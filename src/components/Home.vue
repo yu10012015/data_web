@@ -94,7 +94,6 @@ const changeSelect = (value, option) => {
 
 
 const downloadCsv = () => {
-  
   JSONToCSVConvertor(rawExcel(Tdata.value.data, cols1), '测试数据', true)
 };
 //radio事件
@@ -181,7 +180,7 @@ let getData = () => {
       Tdata.value.loading = false
       Tdata.value.data = res.rows;
       pagination.itemCount = res.total;
-      message.success('数据加载成功')
+      // message.success('数据加载成功')
     }
   })
 }
