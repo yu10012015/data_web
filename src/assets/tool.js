@@ -34,7 +34,6 @@ function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
     link.click();
     document.body.removeChild(link);
 }
-
 function rawExcel(data,columns) {
     var tmp = [];
     var text = getText(columns);
@@ -50,7 +49,6 @@ function rawExcel(data,columns) {
     }  
     return tmp;
 }
-
 //根据columns整理对应关系
 function getText(columns) {
     var s={};
@@ -66,9 +64,7 @@ function getText(columns) {
     }
     return s;
 }
-
 // 解析活动中的开始时间和结束时间
-
 function getActTimes(actname){
   let startIndex = actname.indexOf('(');
   let endIndex = actname.indexOf(')');
@@ -76,10 +72,6 @@ function getActTimes(actname){
   let arr = s.split('到');
   return arr
 }
-
-
-
-
 export {
     JSONToCSVConvertor,rawExcel,getActTimes
 }
