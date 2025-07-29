@@ -91,6 +91,13 @@ export default [
         method:"get",
         url:'/api/getdata',
         response:(body)=>{
+           if(body.query.sort){
+               let s=body.query.sort;
+               let o=body.query.order;
+                userList.maindata.sort((a,b)=>{
+                   return  o=='asc'? a[s]-b[s]:b[s]-a[s]
+                })  
+           }
            return {
             code:200,
             msg:'OK',
