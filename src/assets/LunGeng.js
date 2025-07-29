@@ -1,6 +1,3 @@
-
-
-
 let unitSets = reactive([
 	{
 		value: 1,
@@ -18,8 +15,7 @@ let unitSets = reactive([
 		label: '个人'
 	}
 ]);
-
-var columns = [{
+const  columns = [{
 	key: 'RowId',
 	title: '序号',
 	width: 60
