@@ -1,10 +1,10 @@
 import mockJs from "mockjs"
 const userList=mockJs.mock({
     'maindata|50':[{
-         "ALLOC_CallNum": '@integer(50, 200)',
-         "ALLOC_CallNumRate": "@float(1, 100, 2, 2)",
-         "ALLOC_CallNumValid": "@integer(1, 50)",
-        'ALLOC_CallNumValidRate': "@float(1, 100, 2, 2)"
+         "ALLOC_CallNum": '@integer(50, 200)'
+        , "ALLOC_CallNumRate": "@float(1, 100, 2, 2)"
+        , "ALLOC_CallNumValid": "@integer(1, 50)"
+        ,'ALLOC_CallNumValidRate': "@float(1, 100, 2, 2)"
         ,'Class_Today_B3': "@integer(1, 50)"
         ,'Goal': "@float(1, 100, 2, 2)"
         ,'NewTransNum': "@integer(1, 50)"
@@ -91,7 +91,6 @@ export default [
         method:"get",
         url:'/api/getdata',
         response:(body)=>{
-           console.log(body.query);
            return {
             code:200,
             msg:'OK',
