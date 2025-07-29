@@ -5,7 +5,6 @@ const router = createRouter({
   history: createWebHistory(), //默认hash模式
   routes: [
       { path: '/', component: Home }
-
     //   {
     //       path: '/about',
     //       component: About,
