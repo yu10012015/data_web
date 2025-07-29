@@ -34,5 +34,5 @@ npm run dev
 10. 利用mock+vite-plugin-mock提供 项目中用到的数据 --完成
  
 ## 截图
-![alt text](1753773017739.jpg)
+![alt text](image.jpg)
 
