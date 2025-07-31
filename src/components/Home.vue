@@ -20,12 +20,12 @@
             </n-radio-group>
           </n-form-item>
           <n-form-item>
-            <n-button attr-type="button" @click="getData" type="primary" style="width: 100px;"> 查询</n-button>
+            <n-button attr-type="button" @click="getData" type="primary" style="width: 100px;"> {{ btnText }}</n-button>
+
           </n-form-item>
         </n-form>
         <n-button style="position: absolute; right:10px;top:25px" size="small" type="warning"
           @click="downloadCsv">下载CSV</n-button>
-
       </n-layout-header>
       <n-layout has-sider position="absolute" style="top: 64px;">
         <n-layout-sider bordered content-style="padding: 5px,0; " :collapsed-width="10" show-trigger="arrow-circle">
@@ -34,9 +34,8 @@
         <n-layout content-style="padding: 5px;">
           <n-pagination v-bind="pagination" style="float: right;" />
           <n-data-table :columns="columns" :data="Tdata.data" :bordered="false" size="small" ref="tableRef"
-            :row-class-name="changeClass" :loading="Tdata.loading" :single-line="false"   flex-height
-            :style="{ height: wheight + 'px' }" @update:sorter="handleSorterChange" :get-csv-cell="getCsvCell"
-            :get-csv-header="getCsvHeader">
+            :row-class-name="changeClass" :loading="Tdata.loading" :single-line="false" flex-height
+            :style="{ height: wheight + 'px' }" @update:sorter="handleSorterChange">
           </n-data-table>
         </n-layout>
       </n-layout>
@@ -49,8 +48,11 @@ import StaffTree from "./StaffTree.vue"
 import { request } from '@/api/request'
 import { columns as cols, columns1 as cols1, unitSets } from '../assets/LunGeng'
 import { JSONToCSVConvertor, rawExcel, getActTimes } from '@/assets/tool.js'
+import axios from 'axios';
+let controller;
 const tableRef = ref();
-let message = useMessage();
+let btnText = ref('查询');
+
 
 let wheight = ref(null);  // 表格的高度
 let treeId = ref(9);
@@ -79,23 +81,14 @@ let Tdata = ref({
 let GetDepartId = (departId) => {
   treeId.value = departId
 }
-
-const getCsvCell = (value, _, column) => {
-  return value;
-};
-
-const getCsvHeader = (col) => {
-  return col.title || "Unknown";
-};
 const changeSelect = (value, option) => {
   let actName = option['ActName'];
   formValue.value.timeRange = getActTimes(actName);
 }
-
-
 const downloadCsv = () => {
   JSONToCSVConvertor(rawExcel(Tdata.value.data, cols1), '测试数据', true)
 };
+ 
 //radio事件
 let handleChange = (val) => {
   formValue.value.mode = val;
@@ -145,9 +138,6 @@ let pagination = reactive({
     return `共 ${pagination.itemCount} 条数据`
   }
 })
-
-
-
 //获取活动列表
 onBeforeMount(() => {
   request.get("/api/users").then(res => {
@@ -159,37 +149,51 @@ onBeforeMount(() => {
   })
   wheight.value = window.innerHeight - 110;
 })
-
 //获取主数据
 let getData = () => {
-  Tdata.value.loading = true;
-  request.get("/api/getdata", {
-    params: {
-      startDate: formValue.value.timeRange[0].replace(/-/gi, ''),
-      endDate: formValue.value.timeRange[1].replace(/-/gi, ''),
-      actId: formValue.value.actId,
-      mode: formValue.value.mode,
-      unitId: treeId.value,
-      start: formValue.value.start,
-      end: formValue.value.end,
-      sort: formValue.value.sort,
-      order: formValue.value.order
-    }
-  }).then(res => {
-    if (res.msg == 'OK') {
-      Tdata.value.loading = false
-      Tdata.value.data = res.rows;
-      pagination.itemCount = res.total;
-      // message.success('数据加载成功')
-    }
-  })
+  if (btnText.value == '查询') {
+    controller = new AbortController();
+    btnText.value = '取消查询'
+    Tdata.value.loading = true;
+    request.get("/api/getdata", {
+      signal: controller.signal,
+      params: {
+        startDate: formValue.value.timeRange[0].replace(/-/gi, ''),
+        endDate: formValue.value.timeRange[1].replace(/-/gi, ''),
+        actId: formValue.value.actId,
+        mode: formValue.value.mode,
+        unitId: treeId.value,
+        start: formValue.value.start,
+        end: formValue.value.end,
+        sort: formValue.value.sort,
+        order: formValue.value.order
+      }
+    }).then(res => {
+      if (res.msg == 'OK') {
+        Tdata.value.loading = false
+        Tdata.value.data = res.rows;
+        pagination.itemCount = res.total;
+        btnText.value = '查询'
+      }
+    }).catch(function (thrown) {
+      if (axios.isCancel(thrown)) {
+        btnText.value = '查询'
+        Tdata.value.loading = false
+        console.log('Request canceled', thrown.message);
+      }
+    })
+  }
+  else {
+    btnText.value = '查询'
+    controller.abort()
+  }
+
 }
 </script>
 <style scoped>
-:deep(.sumbg td) {
-  color: blue;
-}
-
+  :deep(.sumbg td) {
+    color: blue;
+  }
 /*
 :deep() 是一个深度选择器，用于穿透组件的样式隔离。
 :deep() 是 Vue 3 引入的语法，在 Vue 2 中需要使用 /deep/ 或 >>>，不过这两种在某些预处理器（如 Sass、Less）中可能不被支持。
