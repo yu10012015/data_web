@@ -34,6 +34,7 @@ npm run dev
 8. n-table 列支持排序 -- 完成
 9. 数据执行翻页以及数据页的改变--完成
 10. 利用mock+vite-plugin-mock提供 项目中用到的数据 --完成
+11. 查询数据添加'取消查询'功能-- 完成
  
 ## 截图
 ![alt text](image.jpg)
