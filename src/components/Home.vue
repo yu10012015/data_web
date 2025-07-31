@@ -21,7 +21,6 @@
           </n-form-item>
           <n-form-item>
             <n-button attr-type="button" @click="getData" type="primary" style="width: 100px;"> {{ btnText }}</n-button>
-
           </n-form-item>
         </n-form>
         <n-button style="position: absolute; right:10px;top:25px" size="small" type="warning"
@@ -29,7 +28,7 @@
       </n-layout-header>
       <n-layout has-sider position="absolute" style="top: 64px;">
         <n-layout-sider bordered content-style="padding: 5px,0; " :collapsed-width="10" show-trigger="arrow-circle">
-          <StaffTree v-once @handle-fn="GetDepartId" />
+          <StaffTree v-once  @handle-fn="getDepartId" />
         </n-layout-sider>
         <n-layout content-style="padding: 5px;">
           <n-pagination v-bind="pagination" style="float: right;" />
@@ -43,7 +42,6 @@
   </div>
 </template>
 <script setup>
-import { reactive, onBeforeMount } from "vue";
 import StaffTree from "./StaffTree.vue"
 import { request } from '@/api/request'
 import { columns as cols, columns1 as cols1, unitSets } from '../assets/LunGeng'
@@ -52,8 +50,6 @@ import axios from 'axios';
 let controller;
 const tableRef = ref();
 let btnText = ref('查询');
-
-
 let wheight = ref(null);  // 表格的高度
 let treeId = ref(9);
 let options = ref([]);
@@ -78,7 +74,7 @@ let Tdata = ref({
 })
 
 //获取树的id
-let GetDepartId = (departId) => {
+let getDepartId = (departId) => {
   treeId.value = departId
 }
 const changeSelect = (value, option) => {
@@ -187,7 +183,6 @@ let getData = () => {
     btnText.value = '查询'
     controller.abort()
   }
-
 }
 </script>
 <style scoped>
